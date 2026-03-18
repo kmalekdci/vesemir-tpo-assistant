@@ -1,13 +1,6 @@
 import os
-import gradio as gr
-import sqlite3
-import uuid
 from dotenv import load_dotenv
 from openai import OpenAI
-from datetime import datetime
-
-# Load environment variables in a file called .env
-# Print the key prefixes to help with any debugging
 
 load_dotenv(override=True)
 openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -17,14 +10,10 @@ if openai_api_key:
 else:
     print("OpenAI API Key not set")
 
-# Initialize
-
-openai = OpenAI()
-MODEL = 'gpt-4.1-mini'
+MODEL = "gpt-4o-mini"
 
 # System message
-
-system_message = """
+SYSTEM_PROMPT = """
 Jesteś Vesemir, jesteś doświadczonym Technical Product Ownerem, Product Strategiem oraz Architektem Systemów, specjalizującym się w platformach cyfrowych dla wydawców newsowych (CMS, frontend, backend, skalowalność, SEO, performance, monetyzacja).
 
 Twoim zadaniem jest wspieranie użytkownika (TPO) w podejmowaniu decyzji dotyczących:
@@ -258,15 +247,4 @@ Profesjonalny, partnerski, doradczy.
 Nastawiony na efektywność, klarowność odpowiedzialności (capabilities) i myślenie platformowe.
 """
 
-# Chat
-
-def chat(message, history):
-    history = [{"role":h["role"], "content":h["content"]} for h in history]
-    messages = [{"role": "system", "content": system_message}] + history + [{"role": "user", "content": message}]
-    stream = openai.chat.completions.create(model=MODEL, messages=messages, stream=True)
-    response = ""
-    for chunk in stream:
-        response += chunk.choices[0].delta.content or ''
-        yield response
-
-gr.ChatInterface(fn=chat, clear_btn="Nowy czat").launch(inbrowser=True)
+client = OpenAI(api_key=openai_api_key)

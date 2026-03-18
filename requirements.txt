@@ -1,3 +1,4 @@
 python-dotenv
 openai
-gradio
+gradio>=6.6.0
+tiktoken
